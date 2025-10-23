@@ -1,0 +1,5 @@
+{
+  "name": "Copy of A11y Inspector: AI-Powered Accessibility Scanner",
+  "description": "A powerful accessibility tool to scan HTML code snippets for WCAG violations. It provides detailed reports, a knowledge base of common issues, and leverages AI to suggest code fixes, helping developers build more inclusive web experiences.",
+  "requestFramePermissions": []
+}
