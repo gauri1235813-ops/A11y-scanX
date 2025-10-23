@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 type IconProps = {
@@ -50,5 +49,11 @@ export const DocumentMagnifyingGlassIcon: React.FC<IconProps> = ({ className }) 
 export const XMarkIcon: React.FC<IconProps> = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+    </svg>
+);
+
+export const TerminalIcon: React.FC<IconProps> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="m6.75 7.5 3.75-3.75M6.75 7.5l-3.75 3.75M6.75 7.5h10.5m-10.5 6l3.75 3.75m-3.75-3.75L3 17.25m14.25-9.75l-3.75-3.75M17.25 7.5l3.75 3.75M17.25 7.5h-1.5m-12.75 6h15m-15 0l-3.75 3.75m3.75-3.75l3.75 3.75m7.5-3.75l3.75 3.75M17.25 13.5l-3.75 3.75" />
     </svg>
 );

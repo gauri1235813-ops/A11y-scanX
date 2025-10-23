@@ -10,7 +10,7 @@ const ArticleCard: React.FC<{ article: KnowledgeBaseArticle }> = ({ article }) =
   return (
     <div className="bg-slate-800 border border-slate-700 rounded-lg overflow-hidden transition-shadow hover:shadow-cyan-500/10 hover:shadow-lg">
       <button
-        className="w-full p-4 text-left flex justify-between items-center"
+        className="w-full p-4 text-left flex justify-between items-center rounded-lg focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
       >

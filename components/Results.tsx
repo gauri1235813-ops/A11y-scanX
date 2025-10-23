@@ -6,11 +6,12 @@ import { ShieldCheckIcon } from './Icons';
 
 interface ResultsProps {
   violations: Violation[];
+  totalViolations: number;
   isLoading: boolean;
   onGetSuggestion: (violationId: string) => void;
 }
 
-const Results: React.FC<ResultsProps> = ({ violations, isLoading, onGetSuggestion }) => {
+const Results: React.FC<ResultsProps> = ({ violations, totalViolations, isLoading, onGetSuggestion }) => {
   if (isLoading) {
     return (
       <div className="w-full h-96 bg-slate-800 rounded-lg flex items-center justify-center">
@@ -32,7 +33,7 @@ const Results: React.FC<ResultsProps> = ({ violations, isLoading, onGetSuggestio
     return scoreA - scoreB;
   });
   
-  if (sortedViolations.length === 0) {
+  if (totalViolations === 0 && !isLoading) {
     return (
       <div className="w-full h-96 bg-slate-800 rounded-lg flex items-center justify-center text-center">
         <div>
@@ -47,10 +48,24 @@ const Results: React.FC<ResultsProps> = ({ violations, isLoading, onGetSuggestio
 
   return (
     <div className="space-y-4">
-      <p className="text-slate-400">
-        Found <span className="font-bold text-cyan-400">{violations.length}</span> issue(s).
-        Issues are sorted by impact level.
-      </p>
+      {totalViolations > 0 && (
+        <p className="text-slate-400">
+          Showing <span className="font-bold text-cyan-400">{violations.length}</span> of 
+          {' '}<span className="font-bold text-slate-200">{totalViolations}</span> issue(s).
+          Issues are sorted by impact level.
+        </p>
+      )}
+
+      {sortedViolations.length === 0 && totalViolations > 0 && (
+          <div className="w-full h-80 bg-slate-800 rounded-lg flex items-center justify-center text-center">
+              <div>
+                  <ShieldCheckIcon className="h-16 w-16 text-cyan-400 mx-auto"/>
+                  <h3 className="mt-4 text-xl font-bold text-slate-100">No issues match your filters</h3>
+                  <p className="text-slate-400 mt-1">Try adjusting the WCAG Level or Rule filters.</p>
+              </div>
+          </div>
+      )}
+
       {sortedViolations.map((violation, index) => (
         <ResultItem key={`${violation.id}-${index}`} violation={violation} onGetSuggestion={onGetSuggestion} />
       ))}

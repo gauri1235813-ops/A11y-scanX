@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { View } from '../types';
-import { ShieldCheckIcon, BookOpenIcon } from './Icons';
+import { ShieldCheckIcon, BookOpenIcon, TerminalIcon } from './Icons';
 
 interface HeaderProps {
   currentView: View;
@@ -9,7 +8,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView }) => {
-  const navItemClasses = "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer";
+  const navItemClasses = "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-cyan-500";
   const activeClasses = "bg-slate-700 text-white";
   const inactiveClasses = "text-slate-400 hover:bg-slate-800 hover:text-white";
 
@@ -37,6 +36,13 @@ const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView }) => {
             >
               <BookOpenIcon className="h-5 w-5" />
               Knowledge Base
+            </button>
+            <button
+              onClick={() => setCurrentView(View.AUTOMATION)}
+              className={`${navItemClasses} ${currentView === View.AUTOMATION ? activeClasses : inactiveClasses}`}
+            >
+              <TerminalIcon className="h-5 w-5" />
+              Automation
             </button>
           </nav>
         </div>

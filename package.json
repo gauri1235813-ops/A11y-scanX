@@ -12,7 +12,8 @@
     "react-dom": "^19.2.0",
     "@google/genai": "^1.26.0",
     "react": "^19.2.0",
-    "axe-core": "^4.11.0"
+    "axe-core": "^4.11.0",
+    "cypress-axe": "^1.7.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

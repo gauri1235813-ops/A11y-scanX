@@ -1,14 +1,14 @@
-
 import React, { useState } from 'react';
 import Header from './components/Header';
 import Scanner from './components/Scanner';
 import KnowledgeBase from './components/KnowledgeBase';
+import Automation from './components/Automation';
 import FloatingActionButton from './components/FloatingActionButton';
 import { View } from './types';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>(View.SCANNER);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   return (
     <div className="fixed bottom-5 right-5 z-[9999] font-sans">
@@ -26,6 +26,7 @@ const App: React.FC = () => {
         <main className="p-4 sm:p-6 lg:p-8 flex-grow overflow-y-auto">
           {currentView === View.SCANNER && <Scanner />}
           {currentView === View.KNOWLEDGE_BASE && <KnowledgeBase />}
+          {currentView === View.AUTOMATION && <Automation />}
         </main>
         <footer className="text-center p-4 text-slate-500 text-sm border-t border-slate-800">
           <p>A11y Inspector &copy; 2024. Empowering accessible web development.</p>

@@ -15,24 +15,35 @@ export const getAIFixSuggestion = async (violation: Violation): Promise<string> 
   const node = violation.nodes[0];
   
   const prompt = `
-    As an expert web accessibility engineer, your task is to analyze an accessibility violation and provide a solution.
+    As an expert web accessibility engineer, your task is to analyze an accessibility violation and provide a clear, actionable solution for a fellow developer.
 
-    **Violation:** ${violation.help} (${violation.id})
-    **Description:** ${violation.description}
-    **Impact:** ${violation.impact}
-    **WCAG Standards:** ${violation.tags.filter(tag => tag.startsWith('wcag')).join(', ')}
+    **Accessibility Violation Details:**
+    - **Rule ID:** ${violation.id}
+    - **Violation:** ${violation.help}
+    - **Impact:** ${violation.impact}
+    - **WCAG Reference:** ${violation.tags.filter(tag => tag.startsWith('wcag')).join(', ')}
 
     **Problematic HTML Snippet:**
     \`\`\`html
     ${node.html}
     \`\`\`
 
-    **Instructions:**
-    1.  Briefly explain the issue in simple, clear terms for a developer.
-    2.  Provide a corrected version of the HTML snippet that fixes the accessibility issue.
-    3.  Enclose the corrected code in a single HTML markdown code block. Do not add any other code blocks.
+    **Your Task:**
+    Provide a response formatted exactly as follows, using Markdown. Do not add any introductory or concluding sentences outside of this structure.
 
-    Your response should be concise and directly address the problem shown in the snippet.
+    ### The Issue
+    A brief, one-sentence explanation of what's wrong in the provided HTML snippet.
+
+    ### Why It Matters
+    Explain how this specific issue negatively impacts users, particularly those using assistive technologies (like screen readers).
+
+    ### The Fix
+    Provide a clear explanation of the changes needed to correct the HTML.
+
+    ### Corrected Code
+    \`\`\`html
+    <!-- Your corrected HTML snippet goes here -->
+    \`\`\`
     `;
 
   try {

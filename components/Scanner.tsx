@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { scanHtmlSnippet, scanLivePage } from '../services/accessibilityService';
 import { getAIFixSuggestion } from '../services/geminiService';
 import type { Violation } from '../types';
@@ -27,17 +27,29 @@ const initialHtml = `
 </main>
 `;
 
+const getHighestWcagLevel = (tags: string[]): 'a' | 'aa' | 'aaa' | null => {
+    if (tags.some(t => t.match(/wcag\d+aaa$/))) return 'aaa';
+    if (tags.some(t => t.match(/wcag\d+aa$/))) return 'aa';
+    if (tags.some(t => t.match(/wcag\d+a$/))) return 'a';
+    return null;
+}
+
+
 const Scanner: React.FC = () => {
   const [htmlContent, setHtmlContent] = useState<string>(initialHtml);
   const [violations, setViolations] = useState<Violation[]>([]);
   const [isSnippetScanning, setIsSnippetScanning] = useState<boolean>(false);
   const [isLiveScanning, setIsLiveScanning] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [wcagLevelFilter, setWcagLevelFilter] = useState<string>('all');
+  const [ruleFilter, setRuleFilter] = useState<string>('all');
 
   const handleSnippetScan = useCallback(async () => {
     setIsSnippetScanning(true);
     setError(null);
     setViolations([]);
+    setWcagLevelFilter('all');
+    setRuleFilter('all');
     try {
       const results = await scanHtmlSnippet(htmlContent);
       setViolations(results as Violation[]);
@@ -53,6 +65,8 @@ const Scanner: React.FC = () => {
     setIsLiveScanning(true);
     setError(null);
     setViolations([]);
+    setWcagLevelFilter('all');
+    setRuleFilter('all');
     try {
         const results = await scanLivePage();
         setViolations(results as Violation[]);
@@ -84,6 +98,25 @@ const Scanner: React.FC = () => {
   
   const isLoading = isSnippetScanning || isLiveScanning;
 
+  const availableRules = useMemo(() => {
+    const allRules = new Set<string>();
+    violations.forEach(v => allRules.add(v.id));
+    return ['all', ...Array.from(allRules).sort()];
+  }, [violations]);
+
+  const filteredViolations = useMemo(() => {
+    return violations
+      .filter(v => {
+        if (wcagLevelFilter === 'all') return true;
+        const level = getHighestWcagLevel(v.tags);
+        return level === wcagLevelFilter;
+      })
+      .filter(v => {
+        if (ruleFilter === 'all') return true;
+        return v.id === ruleFilter;
+      });
+  }, [violations, wcagLevelFilter, ruleFilter]);
+
   return (
     <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="flex flex-col">
@@ -101,7 +134,7 @@ const Scanner: React.FC = () => {
             <button
             onClick={handleSnippetScan}
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-2 bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-600 text-white font-bold py-3 px-4 rounded-md transition-transform duration-150 ease-in-out hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-600 text-white font-bold py-3 px-4 rounded-md transition-transform duration-150 ease-in-out hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-cyan-500"
             >
             {isSnippetScanning ? (
                 <>
@@ -121,7 +154,7 @@ const Scanner: React.FC = () => {
             <button
             onClick={handleLiveScan}
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 disabled:bg-slate-600 text-white font-bold py-3 px-4 rounded-md transition-transform duration-150 ease-in-out hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 disabled:bg-slate-600 text-white font-bold py-3 px-4 rounded-md transition-transform duration-150 ease-in-out hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-cyan-500"
             >
             {isLiveScanning ? (
                 <>
@@ -141,10 +174,48 @@ const Scanner: React.FC = () => {
         </div>
       </div>
       <div>
-        <h2 className="text-2xl font-bold text-slate-100 mb-4">Results</h2>
+        <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
+            <h2 className="text-2xl font-bold text-slate-100">Results</h2>
+            {violations.length > 0 && (
+            <div className="flex flex-wrap items-center gap-4">
+                <div className='flex items-center'>
+                    <label htmlFor="wcag-filter" className="text-sm font-medium text-slate-400 mr-2">
+                        Level
+                    </label>
+                    <select
+                        id="wcag-filter"
+                        value={wcagLevelFilter}
+                        onChange={(e) => setWcagLevelFilter(e.target.value)}
+                        className="bg-slate-800 border border-slate-700 text-slate-300 text-sm rounded-md focus:ring-cyan-500 focus:border-cyan-500 p-2 appearance-none"
+                    >
+                        <option value="all">All</option>
+                        <option value="a">A</option>
+                        <option value="aa">AA</option>
+                        <option value="aaa">AAA</option>
+                    </select>
+                </div>
+                <div className='flex items-center'>
+                    <label htmlFor="rule-filter" className="text-sm font-medium text-slate-400 mr-2">
+                        Rule
+                    </label>
+                    <select
+                        id="rule-filter"
+                        value={ruleFilter}
+                        onChange={(e) => setRuleFilter(e.target.value)}
+                        className="bg-slate-800 border border-slate-700 text-slate-300 text-sm rounded-md focus:ring-cyan-500 focus:border-cyan-500 p-2 appearance-none"
+                    >
+                        {availableRules.map(rule => (
+                            <option key={rule} value={rule}>{rule}</option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+            )}
+        </div>
         {error && <p className="text-red-400">{error}</p>}
         <Results 
-          violations={violations} 
+          violations={filteredViolations} 
+          totalViolations={violations.length}
           isLoading={isLoading} 
           onGetSuggestion={handleGetSuggestion} 
         />

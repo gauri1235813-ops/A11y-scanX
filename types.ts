@@ -34,4 +34,5 @@ export interface KnowledgeBaseArticle {
 export enum View {
   SCANNER,
   KNOWLEDGE_BASE,
+  AUTOMATION,
 }

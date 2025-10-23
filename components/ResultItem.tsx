@@ -22,7 +22,7 @@ const ResultItem: React.FC<ResultItemProps> = ({ violation, onGetSuggestion }) =
   return (
     <div className={`border ${styles.border} ${styles.bg} rounded-lg overflow-hidden`}>
       <button
-        className="w-full p-4 text-left flex justify-between items-center"
+        className="w-full p-4 text-left flex justify-between items-center rounded-lg focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500"
         onClick={() => setIsExpanded(!isExpanded)}
         aria-expanded={isExpanded}
       >
@@ -50,29 +50,54 @@ const ResultItem: React.FC<ResultItemProps> = ({ violation, onGetSuggestion }) =
             href={violation.helpUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-sm text-cyan-400 hover:text-cyan-300 hover:underline"
+            className="inline-flex items-center gap-1 text-sm text-cyan-400 hover:text-cyan-300 hover:underline focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded"
           >
              <InformationCircleIcon className="w-4 h-4" />
             Learn more about this issue
           </a>
 
           <div className="mt-4 pt-4 border-t border-slate-700">
-             {violation.aiSuggestion ? (
-                <div>
-                  <h4 className="font-semibold text-slate-300 text-sm mb-2 flex items-center gap-2">
-                    <SparklesIcon className="w-5 h-5 text-cyan-400" />
-                    AI Suggestion
-                  </h4>
-                  <div 
-                    className="prose prose-sm prose-invert max-w-none text-slate-300" 
-                    dangerouslySetInnerHTML={{ __html: violation.aiSuggestion.replace(/```html\n([\s\S]*?)```/g, '<pre><code class="language-html">$1</code></pre>').replace(/\n/g, '<br/>') }}
-                  />
-                </div>
-            ) : (
+             {violation.aiSuggestion ? (() => {
+                // This regex splits the string by ### headings and ```html code blocks, keeping the delimiters.
+                const parts = violation.aiSuggestion.split(/(```html[\s\S]*?```|### .*)/g).filter(part => part && part.trim() !== '');
+                return (
+                    <div>
+                        <h4 className="font-semibold text-slate-300 text-sm mb-2 flex items-center gap-2">
+                            <SparklesIcon className="w-5 h-5 text-cyan-400" />
+                            AI Suggestion
+                        </h4>
+                        <div className="prose prose-sm prose-invert max-w-none text-slate-300">
+                            {parts.map((part, index) => {
+                                if (part.startsWith('### ')) {
+                                    return (
+                                        <h5 key={index} className="font-semibold text-slate-200 !mt-4 !mb-2">
+                                            {part.substring(4)}
+                                        </h5>
+                                    );
+                                }
+                                if (part.startsWith('```html')) {
+                                    const code = part.replace(/```html\n?|```/g, '').trim();
+                                    return (
+                                        <pre key={index} className="bg-slate-900/70 p-3 rounded-md text-sm !my-2">
+                                            <code className="font-mono text-rose-400">{code}</code>
+                                        </pre>
+                                    );
+                                }
+                                // All other parts are treated as paragraphs.
+                                return (
+                                    <p key={index} className="!my-1">
+                                        {part.trim()}
+                                    </p>
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+             })() : (
                  <button 
                     onClick={() => onGetSuggestion(violation.id)}
                     disabled={violation.isAiLoading}
-                    className="w-full flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 disabled:bg-slate-800 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 rounded-md transition-colors text-sm"
+                    className="w-full flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 disabled:bg-slate-800 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 rounded-md transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-cyan-500"
                  >
                     {violation.isAiLoading ? (
                         <>
