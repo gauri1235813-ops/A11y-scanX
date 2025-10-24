@@ -2,13 +2,13 @@ import React from 'react';
 import CodeBlock from './CodeBlock';
 
 const IntegrationGuide: React.FC = () => {
-    const inspectorPort = '5173'; // Assuming a common dev port
-    const inspectorUrl = `http://localhost:${inspectorPort}/index.js`;
-    
-    // Minified bookmarklet for the href attribute for a cleaner link
-    const bookmarkletHref = `javascript:(function(){if(document.getElementById('a11y-inspector-root')){alert('A11y Inspector is already loaded.');return;}var r=document.createElement('div');r.id='a11y-inspector-root';document.body.appendChild(r);var s=document.createElement('script');s.src='${inspectorUrl}';s.type='module';document.body.appendChild(s);})();`;
-    
-    // Formatted code for display in the code block
+    // Dynamically get the base URL. Works for localhost and deployed environments.
+    const inspectorBaseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://your-deployed-url.com';
+    const inspectorUrl = `${inspectorBaseUrl}/index.tsx`;
+
+    // The bookmarklet code now uses the dynamically generated URL.
+    const bookmarkletHref = `javascript:(function(){if(document.getElementById('a11y-inspector-root')){return;}var r=document.createElement('div');r.id='a11y-inspector-root';document.body.appendChild(r);var s=document.createElement('script');s.src='${inspectorUrl}';s.type='module';document.body.appendChild(s);})();`;
+
     const bookmarkletDisplayCode = `
 javascript:(function() {
   // Check if the inspector is already loaded
@@ -30,19 +30,37 @@ javascript:(function() {
 })();
 `.trim();
 
-
     return (
         <div className="max-w-4xl mx-auto prose prose-invert prose-headings:text-slate-100 prose-a:text-cyan-400 hover:prose-a:text-cyan-300">
             <div className="text-center mb-10">
                 <h2 className="text-3xl font-bold">Integration Guide</h2>
                 <p className="mt-2 text-lg text-slate-400">
-                    Two ways to use the A11y Inspector on your own running project.
+                    Two ways to use the A11y Inspector on your own project during development.
                 </p>
             </div>
 
-            <h3>Method 1: Add Script to Project (Recommended)</h3>
+            <h3>Method 1: Zero-Setup Bookmarklet (Recommended)</h3>
             <p>
-                This method is reliable and ensures the inspector is always available during development. You only need to make two small additions to your project's main HTML file (usually `public/index.html`).
+                This is the easiest way to use the inspector on any site, including your local development environment. It requires no changes to your project's code.
+            </p>
+            <div className="not-prose my-6 flex items-center justify-center">
+                 <a 
+                    href={bookmarkletHref}
+                    onClick={(e) => e.preventDefault()}
+                    className="inline-block bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-6 rounded-lg transition-transform duration-150 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-cyan-500"
+                 >
+                    Drag me to your bookmarks bar
+                </a>
+            </div>
+            <p>
+                Simply drag the button above to your browser's bookmarks bar. Then, navigate to any page you want to test and click the bookmark. The A11y Inspector will appear.
+            </p>
+
+            <hr className="border-slate-700 my-12" />
+
+            <h3>Method 2: Add Script to Project (Manual Setup)</h3>
+            <p>
+                If you prefer, you can add the tool directly to a project by editing its main HTML file (usually `public/index.html`).
             </p>
 
             <h4>Step 1: Add the Mount Point</h4>
@@ -56,48 +74,19 @@ javascript:(function() {
 
             <h4>Step 2: Add the Script Tag</h4>
             <p>
-                Next, include the inspector's JavaScript bundle. This script will find the mount point you just added and load the tool. Add this line right after the mount point `div`.
+                Next, include the inspector's JavaScript bundle from this tool's URL. This script will find the mount point and load the tool.
             </p>
             <CodeBlock lang="html">
                 {`<!-- Load the A11y Inspector script -->
-<script src="${inspectorUrl}" defer></script>`}
+<script src="${inspectorUrl}" type="module" defer></script>`}
             </CodeBlock>
             <div className="not-prose my-4 p-4 border-l-4 border-yellow-500 bg-yellow-900/30 text-yellow-300 rounded-r-md">
-                <p className="font-semibold">Important!</p>
+                <p className="font-semibold">Note</p>
                 <p className="text-sm">
-                    Make sure the port in the URL (`${inspectorPort}` in this example) matches the port where your A11y Inspector project is running.
+                    The URL is generated based on where you're currently viewing this tool. When you deploy the A11y Inspector, the URL in the script tag will automatically point to your production host.
                 </p>
             </div>
-            
-            <hr className="border-slate-700 my-12" />
 
-            <h3>Method 2: Zero-Setup Bookmarklet</h3>
-            <p>
-                If you prefer not to modify any project files, you can use a bookmarklet. This is a browser bookmark that runs JavaScript to inject the inspector onto any page you're viewing.
-            </p>
-            <ol>
-                <li>First, ensure the A11y Inspector project is running locally (e.g., via `npm start`).</li>
-                <li className="my-2">
-                    Drag the following link to your browser's bookmarks bar.
-                    <div className="not-prose my-4">
-                        <a 
-                            href={bookmarkletHref}
-                            className="inline-block bg-cyan-600 text-white font-bold py-2 px-4 rounded-md hover:bg-cyan-500 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-cyan-500"
-                            onClick={(e) => e.preventDefault()}
-                        >
-                            A11y Inspector
-                        </a>
-                    </div>
-                </li>
-                <li>Navigate to your own project's page in the browser.</li>
-                <li>Click the "A11y Inspector" bookmark you just created. The tool will appear on the page.</li>
-            </ol>
-            <p>
-                Alternatively, you can manually create a bookmark and paste the following code into the URL/Location field.
-            </p>
-            <CodeBlock lang="javascript">
-                {bookmarkletDisplayCode}
-            </CodeBlock>
         </div>
     );
 };

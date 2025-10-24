@@ -22,11 +22,11 @@ export const scanHtmlSnippet = async (htmlContent: string): Promise<Result[]> =>
   // document context, and prevents errors where no scannable elements are found.
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlContent, 'text/html');
-  const contentToScan = doc.body;
 
-  if (contentToScan.childElementCount === 0) {
-    return [];
-  }
+  // FIX: Scan the entire document element (`<html>`) instead of just the `<body>`.
+  // This allows `axe-core` to detect page-level accessibility issues
+  // (e.g., missing `lang` attribute, missing `<title>`) that were previously missed.
+  const contentToScan = doc.documentElement;
 
   try {
     const results = await axe.run(contentToScan, AXE_OPTIONS);

@@ -3,10 +3,15 @@ import { GoogleGenAI } from "@google/genai";
 import type { Violation } from '../types';
 
 const getGeminiClient = () => {
-    if (!process.env.API_KEY) {
-        throw new Error("API_KEY environment variable not set");
+    // Access the API key from environment variables.
+    // This is provided by the Vite `define` config.
+    // FIX: Switched from `import.meta.env.VITE_API_KEY` to `process.env.API_KEY`
+    // to align with Gemini API guidelines and fix the original TypeScript error.
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+        throw new Error("VITE_API_KEY environment variable not set. Please create a .env file.");
     }
-    return new GoogleGenAI({ apiKey: process.env.API_KEY });
+    return new GoogleGenAI({ apiKey });
 };
 
 export const getAIFixSuggestion = async (violation: Violation): Promise<string> => {
@@ -54,6 +59,6 @@ export const getAIFixSuggestion = async (violation: Violation): Promise<string> 
     return response.text;
   } catch (error) {
     console.error('Error fetching AI suggestion:', error);
-    return 'An error occurred while fetching the suggestion. Please try again.';
+    return 'An error occurred while fetching the suggestion. Please check your API key and try again.';
   }
 };
