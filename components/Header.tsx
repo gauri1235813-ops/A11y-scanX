@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from '../types';
-import { ShieldCheckIcon, BookOpenIcon, TerminalIcon } from './Icons';
+import { ShieldCheckIcon, BookOpenIcon, TerminalIcon, PuzzlePieceIcon } from './Icons';
 
 interface HeaderProps {
   currentView: View;
@@ -43,6 +43,13 @@ const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView }) => {
             >
               <TerminalIcon className="h-5 w-5" />
               Automation
+            </button>
+            <button
+              onClick={() => setCurrentView(View.INTEGRATION)}
+              className={`${navItemClasses} ${currentView === View.INTEGRATION ? activeClasses : inactiveClasses}`}
+            >
+              <PuzzlePieceIcon className="h-5 w-5" />
+              Integration
             </button>
           </nav>
         </div>

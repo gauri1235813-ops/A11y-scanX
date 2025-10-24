@@ -1,11 +1,5 @@
-
 import React, { useState } from 'react';
-
-const CodeBlock: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <pre className="bg-slate-900/70 p-4 rounded-md text-sm overflow-x-auto">
-    <code className="font-mono text-slate-300">{children}</code>
-  </pre>
-);
+import CodeBlock from './CodeBlock';
 
 type AutomationTool = 'cli' | 'component' | 'e2e' | 'ci';
 
@@ -36,13 +30,13 @@ const Pa11yGuide: React.FC = () => {
                 </div>
                  <div className="mt-4">
                     <p className="text-sm text-slate-400">Copy and run this in your terminal:</p>
-                    <CodeBlock>{pa11yCommand}</CodeBlock>
+                    <CodeBlock lang="bash">{pa11yCommand}</CodeBlock>
                 </div>
             </div>
 
             <h4>Advanced Scripting</h4>
             <p>For more complex scenarios, like testing pages behind a login, you can add Pa11y and Playwright to your project.</p>
-             <CodeBlock>npm install --save-dev pa11y playwright</CodeBlock>
+             <CodeBlock lang="bash">npm install --save-dev pa11y playwright</CodeBlock>
         </>
     );
 };
@@ -54,11 +48,11 @@ const JestAxeGuide: React.FC = () => (
         </p>
         
         <h4>1. Installation</h4>
-        <CodeBlock>npm install --save-dev jest-axe</CodeBlock>
+        <CodeBlock lang="bash">npm install --save-dev jest-axe</CodeBlock>
 
         <h4>2. Setup</h4>
         <p>It's helpful to set up a helper file (e.g., `tests/setup.js`) to extend `expect` with `jest-axe` matchers.</p>
-        <CodeBlock>
+        <CodeBlock lang="javascript">
 {`// In your jest setup file (e.g., jest.setup.js)
 import { toHaveNoViolations } from 'jest-axe';
 
@@ -67,7 +61,7 @@ expect.extend(toHaveNoViolations);`}
         
         <h4>3. Example Test</h4>
         <p>Now, you can test your rendered components for accessibility violations.</p>
-        <CodeBlock>
+        <CodeBlock lang="javascript">
 {`import React from 'react';
 import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
@@ -92,15 +86,15 @@ const CypressAxeGuide: React.FC = () => (
         </p>
         
         <h4>1. Installation</h4>
-        <CodeBlock>npm install --save-dev cypress-axe</CodeBlock>
+        <CodeBlock lang="bash">npm install --save-dev cypress-axe</CodeBlock>
 
         <h4>2. Setup</h4>
         <p>Import `cypress-axe` in your Cypress support file (e.g., `cypress/support/e2e.js`).</p>
-        <CodeBlock>import 'cypress-axe';</CodeBlock>
+        <CodeBlock lang="javascript">import 'cypress-axe';</CodeBlock>
         
         <h4>3. Example E2E Test</h4>
         <p>Inject Axe into the page and then call `cy.checkA11y()` to run the scan. You can scan the whole page or target specific elements.</p>
-        <CodeBlock>
+        <CodeBlock lang="javascript">
 {`describe('My Page Accessibility', () => {
   beforeEach(() => {
     cy.visit('/my-page');
@@ -129,11 +123,11 @@ const Pa11yCiGuide: React.FC = () => (
         </p>
 
         <h4>1. Installation</h4>
-        <CodeBlock>npm install --save-dev pa11y-ci</CodeBlock>
+        <CodeBlock lang="bash">npm install --save-dev pa11y-ci</CodeBlock>
 
         <h4>2. Configuration</h4>
         <p>Create a configuration file named `.pa11yci.json` in your project's root directory.</p>
-        <CodeBlock>
+        <CodeBlock lang="json">
 {`{
   "defaults": {
     "timeout": 15000,
@@ -156,7 +150,7 @@ const Pa11yCiGuide: React.FC = () => (
 
         <h4>3. Run in CI</h4>
         <p>Add a script to your `package.json` and call it from your CI pipeline.</p>
-        <CodeBlock>
+        <CodeBlock lang="json">
 {`"scripts": {
   "test:a11y:ci": "pa11y-ci"
 }`}

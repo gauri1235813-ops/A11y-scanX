@@ -57,3 +57,21 @@ export const TerminalIcon: React.FC<IconProps> = ({ className }) => (
         <path strokeLinecap="round" strokeLinejoin="round" d="m6.75 7.5 3.75-3.75M6.75 7.5l-3.75 3.75M6.75 7.5h10.5m-10.5 6l3.75 3.75m-3.75-3.75L3 17.25m14.25-9.75l-3.75-3.75M17.25 7.5l3.75 3.75M17.25 7.5h-1.5m-12.75 6h15m-15 0l-3.75 3.75m3.75-3.75l3.75 3.75m7.5-3.75l3.75 3.75M17.25 13.5l-3.75 3.75" />
     </svg>
 );
+
+export const PuzzlePieceIcon: React.FC<IconProps> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 7.756a4.5 4.5 0 1 0 0 8.488M7.252 15.44a4.5 4.5 0 0 1 0-8.488M14.25 7.756c-.246.046-.486.098-.72.154M14.25 7.756a23.098 23.098 0 0 1-4.5 0M14.25 16.244c.246-.046.486-.098.72-.154M14.25 16.244a23.098 23.098 0 0 0-4.5 0M12 3v3.528c0 .43.18.845.487 1.133l.973.898c.437.404.978.68 1.57.788M12 21v-3.528c0-.43-.18-.845-.487-1.133l-.973-.898c-.437-.404-.978-.68-1.57-.788" />
+    </svg>
+);
+
+export const ClipboardIcon: React.FC<IconProps> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 8.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v8.25A2.25 2.25 0 0 0 6 16.5h2.25m8.25-8.25H18a2.25 2.25 0 0 1 2.25 2.25v6A2.25 2.25 0 0 1 18 21h-5.25A2.25 2.25 0 0 1 10.5 18.75v-6a2.25 2.25 0 0 1 2.25-2.25Z" />
+    </svg>
+);
+
+export const CheckIcon: React.FC<IconProps> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+    </svg>
+);

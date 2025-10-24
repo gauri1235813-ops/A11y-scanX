@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { KNOWLEDGE_BASE_ARTICLES } from '../constants';
 import type { KnowledgeBaseArticle } from '../types';
 import { ChevronDownIcon } from './Icons';
+import CodeBlock from './CodeBlock';
 
 const ArticleCard: React.FC<{ article: KnowledgeBaseArticle }> = ({ article }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,12 +28,12 @@ const ArticleCard: React.FC<{ article: KnowledgeBaseArticle }> = ({ article }) =
             <div>
               <h4 className="font-semibold text-red-400 mb-2">Common Mistake</h4>
               <p className="text-sm text-slate-400 mb-2">{article.commonMistake.explanation}</p>
-              <pre className="bg-slate-900/70 p-3 rounded-md text-sm"><code className="font-mono text-slate-300">{article.commonMistake.code.trim()}</code></pre>
+              <CodeBlock lang="html">{article.commonMistake.code}</CodeBlock>
             </div>
             <div>
               <h4 className="font-semibold text-green-400 mb-2">Solution</h4>
               <p className="text-sm text-slate-400 mb-2">{article.solution.explanation}</p>
-              <pre className="bg-slate-900/70 p-3 rounded-md text-sm"><code className="font-mono text-slate-300">{article.solution.code.trim()}</code></pre>
+              <CodeBlock lang="html">{article.solution.code}</CodeBlock>
             </div>
           </div>
         </div>
