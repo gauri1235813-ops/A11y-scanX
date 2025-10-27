@@ -5,7 +5,6 @@ import KnowledgeBase from './components/KnowledgeBase';
 import Automation from './components/Automation';
 import FloatingActionButton from './components/FloatingActionButton';
 import { View } from './types';
-import IntegrationGuide from './components/IntegrationGuide';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>(View.SCANNER);
@@ -28,7 +27,6 @@ const App: React.FC = () => {
           {currentView === View.SCANNER && <Scanner />}
           {currentView === View.KNOWLEDGE_BASE && <KnowledgeBase />}
           {currentView === View.AUTOMATION && <Automation />}
-          {currentView === View.INTEGRATION && <IntegrationGuide />}
         </main>
         <footer className="text-center p-4 text-slate-500 text-sm border-t border-slate-800">
           <p>A11y Inspector &copy; 2024. Empowering accessible web development.</p>

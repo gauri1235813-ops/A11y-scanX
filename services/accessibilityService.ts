@@ -39,20 +39,18 @@ export const scanHtmlSnippet = async (htmlContent: string): Promise<Result[]> =>
 
 export const scanLivePage = async (): Promise<Result[]> => {
     try {
-        // FIX: Added a pre-scan check. If the page body contains no elements other
-        // than the inspector's own root, we return early. This prevents axe-core
-        // from throwing a "No elements found" error when scanning a blank page.
-        const scannableElements = Array.from(document.body.children).filter(
-            (el) => el.id !== 'a11y-inspector-root'
-        );
-
-        if (scannableElements.length === 0) {
-            return [];
-        }
-
-        const results = await axe.run({
+        // FIX: The `axe.run` function was being called incorrectly, with options split
+        // into two arguments. The correct approach is to pass a single options object
+        // containing all configuration, including the `exclude` property.
+        // The previous pre-scan check was also removed as it prevented page-level
+        // rules (e.g., document-title) from running correctly.
+        const liveScanOptions = {
+            ...AXE_OPTIONS,
             exclude: [['#a11y-inspector-root']], // Exclude the scanner's own UI
-        }, AXE_OPTIONS);
+        };
+        
+        // `axe.run` defaults to scanning the entire `document` when no context is provided.
+        const results = await axe.run(liveScanOptions);
         return results.violations;
     } catch (error) {
         console.error('Error running live accessibility scan:', error);

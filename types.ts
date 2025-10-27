@@ -35,5 +35,4 @@ export enum View {
   SCANNER,
   KNOWLEDGE_BASE,
   AUTOMATION,
-  INTEGRATION,
 }
